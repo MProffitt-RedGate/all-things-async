@@ -2,7 +2,7 @@
 
 public static class ThreadSynchronization 
 {
-    public static void RunBadWaitingThread()
+    public static async Task RunBadWaitingThread()
     {
         BoxedInt? mustBeSet = null;
 
@@ -17,18 +17,21 @@ public static class ThreadSynchronization
             {
                 try
                 {
-                    Console.WriteLine($"This will cause an Exception");
+                    Console.WriteLine($"[RunBadWaitingThread] This will cause an Exception");
                     var read = mustBeSet!.Value;
                 }
                 catch (NullReferenceException e)
                 {
-                    Console.WriteLine("NullReferenceException was thrown and caught");
+                    Console.WriteLine("[RunBadWaitingThread] NullReferenceException was thrown and caught");
                 }
             }
         );
         
         valueSettingThread.Start();
         valueReadingThread.Start();
+        
+        valueSettingThread.Join();
+        valueReadingThread.Join();
     }
     
     public static void RunGoodWaitingThread()
@@ -46,11 +49,11 @@ public static class ThreadSynchronization
 
         var valueReadingThread = new Thread(() =>
             {
-                Console.WriteLine("Waiting for event to open");
+                Console.WriteLine("[RunGoodWaitingThread] Waiting for event to open");
                 myEvent.Wait();
                 var read = mustBeSet!.Value;
                 
-                Console.WriteLine($"Successfully wait for value: {read}");
+                Console.WriteLine($"[RunGoodWaitingThread] Successfully wait for value: {read}");
             }
         );
         

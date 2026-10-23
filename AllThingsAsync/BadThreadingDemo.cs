@@ -25,7 +25,7 @@ public static class BadThreadingDemo
             thread.Join();
         }  
 
-        Console.WriteLine($"Final value {myVal} - It's probably wrong");
+        Console.WriteLine($"[RunBad] Final value {myVal} - It's probably wrong");
     }
     
     public static void RunSlightlyBetter()
@@ -53,7 +53,7 @@ public static class BadThreadingDemo
             thread.Join();
         }  
 
-        Console.WriteLine($"Final value {myVal} - It's likely correct, but still not very safe");
+        Console.WriteLine($"[RunSlightlyBetter] Final value {myVal} - It's likely correct, but still not very safe");
     }
     
     public static void RunSafelyWithLock()
@@ -83,12 +83,12 @@ public static class BadThreadingDemo
             thread.Join();
         }  
 
-        Console.WriteLine($"Final value {myVal} - This is 100% correct, always");
+        Console.WriteLine($"[RunSafelyWithLock] Final value {myVal} - This is 100% correct, always");
     }
     
     public static void RunATimedLock()
     {
-        Console.WriteLine($"[Timed Lock] Running {DateTime.Now.ToString("hh:mm:ss")}...");
+        Console.WriteLine($"[RunATimedLock] Running {DateTime.Now.ToString("hh:mm:ss")}...");
         var threads = new Thread[10];
         var myVal = 0;
         var myLock = new Lock();
@@ -100,7 +100,7 @@ public static class BadThreadingDemo
                 Thread.Sleep(3000);
             }
             
-            Console.WriteLine($"[Timed Lock] Released");
+            Console.WriteLine($"[RunATimedLock] Released");
         });
 
         for (int i = 0; i < threads.Length; i++)
@@ -124,12 +124,12 @@ public static class BadThreadingDemo
             thread.Join();
         }  
 
-        Console.WriteLine($"[Timed Lock] Finished {DateTime.Now.ToString("hh:mm:ss")}... Value = {myVal}");
+        Console.WriteLine($"[RunATimedLock] Finished {DateTime.Now.ToString("hh:mm:ss")}... Value = {myVal}");
     }
 
     public static void RunALikelyDeadlock()
     {
-        Console.WriteLine("[Deadlock] You'll probably never see the next message from this method");
+        Console.WriteLine("[RunALikelyDeadlock] You'll probably never see the next message from this method");
         var threads = new Thread[10];
         var myVal = 0;
         var lockA = new Lock();
@@ -163,7 +163,7 @@ public static class BadThreadingDemo
                     }
                 }
             });
-    
+            threads[i].IsBackground = true; // This will prevent the application from never ending
             threads[i].Start();
         }
 
@@ -172,6 +172,6 @@ public static class BadThreadingDemo
             thread.Join();
         }  
 
-        Console.WriteLine("[Deadlock] Potatoes");
+        Console.WriteLine("[RunALikelyDeadlock] Potatoes");
     }
 }

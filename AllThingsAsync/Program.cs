@@ -23,3 +23,7 @@ await Task.Run(async () =>
 
 await ThreadSynchronization.RunBadWaitingThread();
 ThreadSynchronization.RunGoodWaitingThread();
+
+// Thread Properties
+
+ThreadProperties.RunLocaleThread();
